@@ -41,6 +41,7 @@ task main()
 
 	int songChoice = 0;
 
+    // Allows user to choose between multiple songs. Two songs have been coded in: 'Free Fallin' by Tom Petty & 'Smoke on the Water' by Deep Purple.
 	while (!getButtonPress(buttonEnter))
 	{
 		if(getButtonPress(buttonLeft) || getButtonPress(buttonRight))
@@ -61,9 +62,11 @@ task main()
 		}
 	}
 
+    // Code waits for button to be release before continuing
 	while(getButtonPress(buttonEnter))
 	{}
-
+    
+    // Displays song speed selection options
 	eraseDisplay();
 	displayString(0, "Choose a Speed:");
 	displayString(1, "Press Enter for Normal Speed");
@@ -72,7 +75,8 @@ task main()
 	displayString(4, "Press Touch Sensor to End");
 
 	int baseTempo = 4;
-
+    
+    // Allows for song speed selection by changing the base tempo of the song
 	while (!getButtonPress(buttonAny))
 	{}
 	if(getButtonPress(buttonRight))
@@ -83,6 +87,7 @@ task main()
 	while (getButtonPress(buttonAny))
 	{}
 	
+    // Initializes all array values to zero (chordPosition X and Y and the timings array
 	for (int count = 0; count < MAX_SIZE; count++)
 	{
 		chordPositionX[count] = 0;
@@ -90,23 +95,26 @@ task main()
 		timings[count] = 0;
 	}
 
+    // Initialization of the file variable
 	TFileHandle fin;
 	bool fileOkay;
 	
+    // Displays the song being played
 	eraseDisplay();
 	if(songChoice % 2 == 1)
 	{
 		fileOkay = openReadPC(fin, "free_fallin.txt");
-		setPixel(0,0);
+		setPixel(0,0); // This pixel was used to determine which song is to be diplayed after pausing.
 	}
 	else
 		fileOkay = openReadPC(fin, "smoke.txt");
-
+    
 	displaySong(getPixel(0,0));
 
 	if(!fileOkay)
 		terminate();
-
+    
+    // Reads in file chosen
 	int chordNumber = readFile(fin, chordPositionX, chordPositionY, timings);
 	closeFilePC(fin);
 
@@ -123,6 +131,7 @@ task main()
 	commitOrRelease();
 	while (currChord < chordNumber)
 	{
+        
 		while(time1[T1] < timings[currChord] * baseTempo)
 			if(getButtonPress(buttonEnter))
 				pause(true);
